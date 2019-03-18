@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.iot.dao.RecordMapper">
+  <cache eviction="LRU" flushInterval="600000" readOnly="true" size="1024" />
+
+  <resultMap id="BaseResultMap" type="com.eservice.iot.model.record.Record">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="face_record_id" jdbcType="VARCHAR" property="faceRecordId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="student_num" jdbcType="VARCHAR" property="studentNum" />
+    <result column="face_id" jdbcType="VARCHAR" property="faceId" />
+    <result column="branch" jdbcType="VARCHAR" property="branch" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="attendance_time" jdbcType="TIMESTAMP" property="attendanceTime" />
+    <result column="push_time" jdbcType="TIMESTAMP" property="pushTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
+  <select id="getPushedMsg" resultMap="BaseResultMap">
+    select * from record r
+    where 1 = 1
+    <if test="status != null">
+      and r.status = status
+    </if>
+    <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的记录 -->
+    <if test="query_start_time!=null and query_start_time!=''">
+      AND r.attendance_time &gt;= #{query_start_time}
+    </if>
+    <if test="query_end_time!=null and query_end_time!=''">
+      AND r.attendance_time &lt;= #{query_end_time}
+    </if>
+    ORDER BY r.attendance_time DESC
+  </select>
+
+</mapper>
