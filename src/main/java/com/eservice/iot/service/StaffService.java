@@ -143,6 +143,12 @@ public class StaffService {
     private void reSendMessage() {
         List<Record> records = recordService.getPushedMsg(0, null, null);
         for (int i = 0; i < records.size(); i++) {
+            //如果出现参数错误的情况，需要进行手动干预处理
+            if(records.get(i).getStatus() == 2) {
+                logger.error("Parameter error: name {}, studentNum {}, attendance_time {}",
+                        records.get(i).getName(), records.get(i).getStudentNum(),formatter.format(records.get(i).getAttendanceTime()));
+                continue;
+            }
             pushRecordToServer(JSON.toJSONString(records.get(i)));
             try {
                 Thread.sleep(10);
