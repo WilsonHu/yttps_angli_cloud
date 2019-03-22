@@ -19,10 +19,10 @@
   </resultMap>
 
   <select id="getPushedMsg" resultMap="BaseResultMap">
-    select * from record r
+    select * from record as r
     where 1 = 1
     <if test="status != null">
-      and r.status = status
+      and r.status = #{status}
     </if>
     <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的记录 -->
     <if test="query_start_time!=null and query_start_time!=''">
