@@ -66,7 +66,8 @@ public class StudentController {
     private TagService tagService;
 
     @PostMapping("/add")
-    public Result add(@RequestParam String photoData, @RequestParam String name, @RequestParam String studentNum, @RequestParam String branches) {
+    public Result add(@RequestParam String photoData, @RequestParam String name, @RequestParam String studentNum,
+                      @RequestParam String branches,@RequestParam(defaultValue = "1") String role) {
         if(photoData == null || "".equals(photoData)) {
             return  ResultGenerator.genFailResult("照片不能为空！");
         }
@@ -124,6 +125,13 @@ public class StudentController {
                         }
                     }
                 }
+                if(role.equals("1") && !"".equals(tagService.getTagIdByName("学生"))) {
+                    tagIdList.add(tagService.getTagIdByName("学生"));
+                }else if(role.equals("2") && !"".equals(tagService.getTagIdByName("老师"))) {
+                    tagIdList.add(tagService.getTagIdByName("老师"));
+                }else {
+                    return ResultGenerator.genFailResult("角色值(role)不正确，必须是0或者1.");
+                }
             }
         }
         Staff staff = new Staff();
@@ -134,6 +142,8 @@ public class StudentController {
         PersonInformation personInformation = new PersonInformation();
         personInformation.setId(studentNum);
         personInformation.setName(name);
+        //增加学生和老师的区别，填写在备注中
+        personInformation.setRemark(role.equals("1") ? "学生" : "老师");
         staff.setPerson_information(personInformation);
         Staff newStaff = createStaff(staff);
         if(newStaff != null) {
@@ -160,7 +170,8 @@ public class StudentController {
     }
 
     @PostMapping("/update")
-    public Result update(@RequestParam String faceId,String photoData, @RequestParam String name, @RequestParam String studentNum, @RequestParam String branches) {
+    public Result update(@RequestParam String faceId,String photoData, @RequestParam String name, @RequestParam String studentNum,
+                         @RequestParam String branches,@RequestParam(defaultValue = "1") String role) {
         ArrayList<Staff> staffArrayList = staffService.getStaffList();
         if(faceId == null || "".equals(faceId)) {
             return  ResultGenerator.genFailResult("FaceId不能为空！");
@@ -211,6 +222,13 @@ public class StudentController {
                             tagIdList.add(tag.getTag_id());
                         }
                     }
+                }
+                if(role.equals("1") && !"".equals(tagService.getTagIdByName("学生"))) {
+                    tagIdList.add(tagService.getTagIdByName("学生"));
+                }else if(role.equals("2") && !"".equals(tagService.getTagIdByName("老师"))) {
+                    tagIdList.add(tagService.getTagIdByName("老师"));
+                } else {
+                    return ResultGenerator.genFailResult("角色值(role)不正确，必须是0或者1.");
                 }
             }
         }
@@ -298,7 +316,7 @@ public class StudentController {
                     if (exception.getStatusCode().value() == ResponseCode.TOKEN_INVALID) {
                         token = tokenService.getToken();
                         if (token != null) {
-                            update(faceId, photoData, name, studentNum, branches);
+                            update(faceId, photoData, name, studentNum, branches, role);
                         }
                     }
                 } catch (Exception e) {
@@ -369,7 +387,10 @@ public class StudentController {
                 }
             } catch (HttpClientErrorException errorException) {
                 if (errorException.getStatusCode().value() == ResponseCode.TOKEN_INVALID) {
-                    search(photoData,score);
+                    token = tokenService.getToken();
+                    if (token != null) {
+                        search(photoData,score);
+                    }
                 }
             }
             return ResultGenerator.genSuccessResult(searchResultList);

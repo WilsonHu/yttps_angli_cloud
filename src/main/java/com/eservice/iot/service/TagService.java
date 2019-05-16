@@ -164,6 +164,17 @@ public class TagService {
             if (tmpList != null && tmpList.size() > 0) {
                 logger.info("The number of tag：{} ==> {}", mAllTagList.size(), tmpList.size());
                 mAllTagList = tmpList;
+                //判断园区中是否存在“学生”/“老师”标签
+                if("".equals(getTagIdByName("学生"))) {
+                    Map map = new HashMap();
+                    map.put("role", "1");
+                    createTag("学生","STAFF", map);
+                }
+                if("".equals(getTagIdByName("老师"))) {
+                    Map map = new HashMap();
+                    map.put("role", "2");
+                    createTag("老师","STAFF", map);
+                }
                 TAG_INITIAL_FINISHED = true;
             }
         }
@@ -255,6 +266,9 @@ public class TagService {
     public Tag getTagByBranchId(String branchId) {
         Tag targetTag = null;
         for (Tag tag: mAllTagList) {
+            if(tag.getMeta() == null || tag.getMeta().get("id") == null) {
+                continue;
+            }
             if(tag.getMeta().get("id") != null && tag.getMeta().get("id").equals(branchId)) {
                 targetTag = tag;
                 break;

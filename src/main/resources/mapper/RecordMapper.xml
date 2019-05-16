@@ -16,6 +16,7 @@
     <result column="attendance_time" jdbcType="TIMESTAMP" property="attendanceTime" />
     <result column="push_time" jdbcType="TIMESTAMP" property="pushTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
   </resultMap>
 
   <select id="getPushedMsg" resultMap="BaseResultMap">

@@ -49,7 +49,17 @@ public class RecordWrapper {
     @Column(name = "push_time")
     private String pushTime;
 
-//    /**
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    //    /**
 //     * 插入数据库时间
 //     */
 //    @Column(name = "create_time")

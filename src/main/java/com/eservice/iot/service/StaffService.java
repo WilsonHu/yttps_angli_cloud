@@ -234,6 +234,7 @@ public class StaffService {
                 recordWrapper.setAttendanceTime(formatter.format(recordEntity.getAttendanceTime()));
                 recordWrapper.setBranch(JSON.parseObject(recordEntity.getBranch(), Branch.class));
                 recordWrapper.setPushTime(formatter.format(recordEntity.getPushTime()));
+                recordWrapper.setRole(recordEntity.getRole());
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(HttpHeaders.ACCEPT, "application/json");

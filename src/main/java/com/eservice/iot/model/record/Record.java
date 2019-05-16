@@ -1,7 +1,8 @@
 package com.eservice.iot.model.record;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Record {
     /**
@@ -52,6 +53,20 @@ public class Record {
      */
     @Column(name = "create_time")
     private Date createTime;
+
+    /**
+     * 角色（学生）
+     */
+    @Column(name = "role")
+    private String role = "1";
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     /**
      * 获取UUID
